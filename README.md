@@ -1,4 +1,4 @@
-# think2h4ck-addons
+# thinkphp51-addons
 
 基于 FastAdmin插件模块升级到thinkphp 5.1
 
