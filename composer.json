@@ -1,7 +1,7 @@
 {
   "name": "zhusg/thinkphp51-addons",
   "description": "addons package for thinkphp5.1 on fastadmin-addons",
-  "homepage": "https://github.com/cygmris/think2h4ck-addons",
+  "homepage": "https://github.com/hellowzsg/thinkphp51-addons.git",
   "license": "Apache-2.0",
   "minimum-stability": "dev",
   "version": "1.0",
