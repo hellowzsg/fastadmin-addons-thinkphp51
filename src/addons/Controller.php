@@ -52,36 +52,51 @@ class Controller extends \think\Controller
      * @param Request $request Request对象
      * @access public
      */
-    public function __construct()
+    public function __construct($request = null)
     {
-
-
-
+        if (is_null($request))
+        {
+            $request = Request::instance();
+        }
+        // 生成request对象
+        $this->request = $request;
         //移除HTML标签
-        Request::filter('strip_tags');
-
+        $this->request->filter('strip_tags');
         // 是否自动转换控制器和操作名
-        $convert = Config::get('url_convert');
-
+        $convert = Config::get('app.url_convert');
         $filter = $convert ? 'strtolower' : 'trim';
         // 处理路由参数
-        $var = Request::param();
-//        $param = $this->request->param();
-        $dispatch = Request::dispatch();
-//        $var = isset($dispatch['var']) ? $dispatch['var'] : []; tp5.0
-//        $var = array_merge($param, $var);
-        $addon = isset($var['addon']) ? $var['addon'] : '';
-        $controller = isset($var['controller']) ? $var['controller'] : '';
-        $action = isset($var['action']) ? $var['action'] : '';
+        $param = $this->request->param();
+        $dispatch = $this->request->dispatch()->getParam();
+        $var = empty($dispatch) ? [] : $dispatch;
+        $var = array_merge($var, $param);
 
+        if (isset($dispatch['method']) && substr($dispatch['method'][0], 0, 7) == "\\addons")
+        {
+            $arr = explode("\\", $dispatch['method'][0]);
+            $addon = strtolower($arr[2]);
+            $controller = strtolower(end($arr));
+            $action = $dispatch['method'][1];
+        }
+        else
+        {
+            $addon = isset($var['addon']) ? $var['addon'] : '';
+            $controller = isset($var['controller']) ? $var['controller'] : '';
+            $action = isset($var['action']) ? $var['action'] : '';
+        }
         $this->addon = $addon ? call_user_func($filter, $addon) : '';
         $this->controller = $controller ? call_user_func($filter, $controller) : 'index';
         $this->action = $action ? call_user_func($filter, $action) : 'index';
+
+        if(!$this->addon){
+            //解析插件名
+            $data = explode('\\', get_class($this));
+            $this->addon = strtolower($data[1]);
+        }
+        $base_template = ADDON_PATH . $this->addon  . DS . 'view' . DS;
         // 重置配置
-        Config::set('template.view_path', ADDON_PATH . $this->addon . DS . 'view' . DS);
-
+        Config::set('template.view_path', $base_template);
         // 父类的调用必须放在设置模板路径之后
-
         parent::__construct();
     }
 
@@ -98,18 +113,21 @@ class Controller extends \think\Controller
 
         // 设置替换字符串
         $cdnurl = Config::get('site.cdnurl');
-        
+
         $this->view->filter(function($content){
             return str_replace("__ADDON__","/assets/addons/" . $this->addon,$content);
         });
 
         $this->auth = Auth::instance();
+
         // token
         $token = $this->request->server('HTTP_TOKEN', $this->request->request('token', \think\facade\Cookie::get('token')));
+
 
         $path = 'addons/' . $this->addon . '/' . str_replace('.', '/', $this->controller) . '/' . $this->action;
         // 设置当前请求的URI
         $this->auth->setRequestUri($path);
+
         // 检测是否需要验证登录
         if (!$this->auth->match($this->noNeedLogin))
         {
