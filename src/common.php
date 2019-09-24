@@ -35,7 +35,7 @@ Hook::add('app_init', function () {
         return;
     }
     // 当debug时不缓存配置
-    $config = App::$debug ? [] : Cache::get('addons', []);
+    $config = App::isDebug() ? [] : Cache::get('addons', []);
     if (empty($config)) {
         $config = get_addon_autoload_config();
         Cache::set('addons', $config);
@@ -343,9 +343,8 @@ function addon_url($url, $vars = [], $suffix = true, $domain = false)
     }
     $val = "@addons/{$url}";
     $config = get_addon_config($addon);
-    $dispatch = think\facade\Request::dispatch();
-    $indomain = false;
-    // $indomain = isset($dispatch['var']['indomain']) && $dispatch['var']['indomain'] ? true : false;
+    $dispatch = think\facade\Request::instance()->dispatch()->getParam();
+    $indomain = isset($dispatch['indomain']) && $dispatch['indomain'] ? true : false;
     $domainprefix = $config && isset($config['domain']) && $config['domain'] ? $config['domain'] : '';
     $rewrite = $config && isset($config['rewrite']) && $config['rewrite'] ? $config['rewrite'] : [];
     if ($rewrite) {
