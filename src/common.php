@@ -95,12 +95,14 @@ Hook::add('app_init', function () {
     //如果在插件中有定义app_init，则直接执行
     if (isset($hooks['app_init'])) {
         foreach ($hooks['app_init'] as $k => $v) {
-            Hook::exec($v, 'app_init');
+            //Hook::exec($v, 'app_init');
+            Hook::portal('appInit');    //修改入口方法
+            Hook::exec($v);
         }
+        Hook::portal('run');  //还原默认入口方法
     }
 
-//    Hook::import($hooks, false);
-    Hook::import($hooks);
+    Hook::import($hooks, true);
 });
 
 /**
