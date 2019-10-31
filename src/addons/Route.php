@@ -66,7 +66,9 @@ class Route
                 // 操作不存在
                 throw new HttpException(404, __('addon action %s not found', get_class($instance) . '->' . $action . '()'));
             }
+            $call = (object)$call;
             Hook::listen('addon_action_begin', $call);
+            $call = (array)$call;
             return call_user_func_array($call, $vars);
         } else {
             abort(500, lang('addon can not be empty'));
