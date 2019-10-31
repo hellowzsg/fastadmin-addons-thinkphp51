@@ -170,8 +170,10 @@ class Controller extends \think\Controller
         $upload = \app\common\model\Config::upload();
 
         // 上传信息配置后
+        $upload = (object)$upload;
         Hook::listen("upload_config_init", $upload);
-        Config::set('upload', array_merge(Config::pull('upload'), $upload));
+        $upload = (array)$upload;
+        Config::set(array_merge(Config::pull('upload'), $upload), 'upload');
 
         // 加载当前控制器语言包
         $this->assign('site', $site);
