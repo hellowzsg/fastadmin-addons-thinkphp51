@@ -345,7 +345,9 @@ function addon_url($url, $vars = [], $suffix = true, $domain = false)
     }
     $val = "@addons/{$url}";
     $config = get_addon_config($addon);
-    $dispatch = think\facade\Request::instance()->dispatch()->getParam();
+    //$dispatch = think\facade\Request::instance()->dispatch()->getParam();
+    $dispatch = think\facade\Request::dispatch();
+    $dispatch = empty($dispatch)? []: $dispatch->getParam();
     $indomain = isset($dispatch['indomain']) && $dispatch['indomain'] ? true : false;
     $domainprefix = $config && isset($config['domain']) && $config['domain'] ? $config['domain'] : '';
     $rewrite = $config && isset($config['rewrite']) && $config['rewrite'] ? $config['rewrite'] : [];
