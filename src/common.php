@@ -13,7 +13,7 @@ define('ADDON_PATH', ROOT_PATH . 'addons' . DS);
 
 
 // 定义路由
-Route::any('addons/:addon/[:controller]/[:action]', "\\think\\addons\\Route@execute");
+Route::any('addons/:addon/[:controller]/[:action]', "\\think\\addons\\Route@execute")->pattern(['controller' => '[\w\-\_\.]+']);
 
 // 如果插件目录不存在则创建
 if (!is_dir(ADDON_PATH)) {
