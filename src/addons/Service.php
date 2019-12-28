@@ -219,7 +219,7 @@ class Service
                 $bootstrapArr[] = file_get_contents($bootstrapFile);
             }
         }
-        $addonsFile = ROOT_PATH . str_replace("/", DS, "public/assets/js/addons.js");
+        $addonsFile = Env::get('root_path') . str_replace("/", DS, "public/assets/js/addons.js");
         if ($handle = fopen($addonsFile, 'w')) {
             $tpl = <<<EOD
 define([], function () {
