@@ -9,7 +9,7 @@ use think\facade\Route;
 use think\Loader;
 
 // 插件目录
-define('ADDON_PATH', ROOT_PATH . 'addons' . DS);
+define('ADDON_PATH', Env::get('root_path') . 'addons' . DS);
 
 
 // 定义路由
