@@ -304,7 +304,7 @@ EOD;
         }
         foreach (self::getCheckDirs() as $k => $dir) {
             if (is_dir($addonDir . $dir)) {
-                copydirs($addonDir . $dir, ROOT_PATH . $dir);
+                copydirs($addonDir . $dir, Env::get('root_path'). $dir);
             }
         }
 
@@ -364,7 +364,7 @@ EOD;
         if ($force) {
             $list = Service::getGlobalFiles($name);
             foreach ($list as $k => $v) {
-                @unlink(ROOT_PATH . $v);
+                @unlink(Env::get('root_path') . $v);
             }
         }
 
@@ -414,7 +414,7 @@ EOD;
         }
         foreach (self::getCheckDirs() as $k => $dir) {
             if (is_dir($addonDir . $dir)) {
-                copydirs($addonDir . $dir, ROOT_PATH . $dir);
+                copydirs($addonDir . $dir, Env::get('root_path') . $dir);
             }
         }
 
@@ -473,7 +473,7 @@ EOD;
         // 移除插件全局资源文件
         $list = Service::getGlobalFiles($name);
         foreach ($list as $k => $v) {
-            @unlink(ROOT_PATH . $v);
+            @unlink(Env::get('root_path') . $v);
         }
 
         $info = get_addon_info($name);
@@ -572,7 +572,7 @@ EOD;
         $addonDir = ADDON_PATH . $name . DS;
         // 扫描插件目录是否有覆盖的文件
         foreach (self::getCheckDirs() as $k => $dir) {
-            $checkDir = ROOT_PATH . DS . $dir . DS;
+            $checkDir = Env::get('root_path') . DS . $dir . DS;
             if (!is_dir($checkDir)) {
                 continue;
             }
@@ -589,7 +589,7 @@ EOD;
                         $filePath = $fileinfo->getPathName();
                         $path = str_replace($addonDir, '', $filePath);
                         if ($onlyconflict) {
-                            $destPath = ROOT_PATH . $path;
+                            $destPath = Env::get('root_path') . $path;
                             if (is_file($destPath)) {
                                 if (filesize($filePath) != filesize($destPath) || md5_file($filePath) != md5_file($destPath)) {
                                     $list[] = $path;
@@ -622,7 +622,7 @@ EOD;
      */
     protected static function getDestAssetsDir($name)
     {
-        $assetsDir = ROOT_PATH . str_replace("/", DS, "public/assets/addons/{$name}/");
+        $assetsDir = Env::get('root_path') . str_replace("/", DS, "public/assets/addons/{$name}/");
         if (!is_dir($assetsDir)) {
             mkdir($assetsDir, 0755, true);
         }
