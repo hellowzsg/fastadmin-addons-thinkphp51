@@ -108,7 +108,7 @@ class Controller extends \think\Controller
 
         // 加载系统语言包
         Lang::load([
-            ADDON_PATH . $this->addon . DS . 'lang' . DS . $this->request->langset() . EXT,
+            ADDON_PATH . $this->addon . DS . 'lang' . DS . $this->request->langset() . '.php',
         ]);
 
         // 设置替换字符串
